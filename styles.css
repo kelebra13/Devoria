@@ -1,0 +1,81 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800;900&display=swap');
+
+:root{
+  --dev-cyan: #00C6D7;
+  --dev-indigo: #8A2EFF;
+  --dev-dark: #0E0E0E;
+  --dev-white: #FFFFFF;
+  --dev-smoke: #BFC7CA;
+  --gradient: linear-gradient(90deg, var(--dev-cyan) 0%, var(--dev-indigo) 100%);
+  --font-heading: "Montserrat", sans-serif;
+  --font-body: "Futura", "Futura PT", "Trebuchet MS", Arial, sans-serif;
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family: var(--font-body);
+  background: var(--dev-dark);
+  color: var(--dev-white);
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+}
+
+/* Header */
+.header{
+  display:flex;
+  align-items:center;
+  gap:20px;
+  padding:24px 40px;
+}
+.header .brand{
+  display:flex;
+  align-items:center;
+  gap:16px;
+}
+.header img.logo{height:56px}
+.header .title{font-family:var(--font-heading);font-weight:800;font-size:18px;letter-spacing:1px}
+.header .cta{margin-left:auto}
+.btn-primary{
+  background:var(--gradient);
+  color:var(--dev-dark);
+  padding:10px 16px;
+  border-radius:10px;
+  font-weight:700;
+  border:none;
+  cursor:pointer;
+}
+
+/* Hero */
+.hero{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:80px 8%;
+  gap:40px;
+}
+.hero .left{flex:1;max-width:720px}
+.hero h1{font-family:var(--font-heading);font-size:56px;margin:0 0 16px;line-height:1.02}
+.hero p{color:var(--dev-smoke);font-size:18px;margin:0 0 24px}
+.hero .actions{display:flex;gap:12px}
+.hero .mockup{flex:0 0 420px;text-align:center}
+
+/* Features */
+.features{display:flex;gap:18px;padding:40px 8%}
+.feature{background:#0b0b0c;padding:20px;border-radius:12px;flex:1}
+.feature h3{font-family:var(--font-heading);margin:0 0 8px;font-size:18px}
+.feature p{margin:0;color:var(--dev-smoke);font-size:14px}
+
+/* Pricing */
+.pricing{padding:40px 8%;display:flex;gap:18px;align-items:stretch}
+.plan{background:linear-gradient(180deg,#0f0f10,#0b0b0c);padding:24px;border-radius:12px;flex:1;text-align:center}
+.plan h4{margin:0 0 8px;font-family:var(--font-heading)}
+.plan .price{font-size:28px;margin:8px 0;color:var(--dev-cyan)}
+
+/* Footer */
+.footer{padding:36px 8%;text-align:center;color:var(--dev-smoke);font-size:13px}
+@media(max-width:900px){
+  .hero{flex-direction:column;text-align:center;padding:40px 6%}
+  .hero .mockup{order:-1}
+}
