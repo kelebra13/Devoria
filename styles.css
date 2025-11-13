@@ -1,5 +1,9 @@
+/* Devoria One styles
+   Headings: Montserrat
+   Body: Futura Semibold (via CDN if available), with fallbacks
+*/
 
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&display=swap');
 
 :root{
   --dev-cyan: #00C6D7;
@@ -9,10 +13,13 @@
   --dev-smoke: #BFC7CA;
   --gradient: linear-gradient(90deg, var(--dev-cyan) 0%, var(--dev-indigo) 100%);
   --font-heading: "Montserrat", sans-serif;
-  --font-body: "Futura", "Futura PT", "Trebuchet MS", Arial, sans-serif;
+  --font-body: "Futura PT", "Futura", "Trebuchet MS", Arial, sans-serif;
+  --container-padding: 8%;
 }
 
+/* Reset & base */
 *{box-sizing:border-box}
+html,body{height:100%}
 body{
   margin:0;
   font-family: var(--font-body);
@@ -20,6 +27,7 @@ body{
   color: var(--dev-white);
   -webkit-font-smoothing:antialiased;
   -moz-osx-font-smoothing:grayscale;
+  line-height:1.5;
 }
 
 /* Header */
@@ -27,16 +35,18 @@ body{
   display:flex;
   align-items:center;
   gap:20px;
-  padding:24px 40px;
+  padding:20px var(--container-padding);
+  border-bottom: 1px solid rgba(255,255,255,0.03);
 }
-.header .brand{
-  display:flex;
-  align-items:center;
-  gap:16px;
-}
-.header img.logo{height:56px}
-.header .title{font-family:var(--font-heading);font-weight:800;font-size:18px;letter-spacing:1px}
-.header .cta{margin-left:auto}
+.brand{display:flex;align-items:center;gap:14px}
+.logo{height:56px;display:block}
+.title{font-family:var(--font-heading);font-weight:800;font-size:18px;letter-spacing:1px}
+.subtitle{font-size:12px;color:var(--dev-smoke)}
+
+/* Nav placement */
+.nav{margin-left:auto}
+
+/* Buttons */
 .btn-primary{
   background:var(--gradient);
   color:var(--dev-dark);
@@ -44,7 +54,16 @@ body{
   border-radius:10px;
   font-weight:700;
   border:none;
-  cursor:pointer;
+  text-decoration:none;
+  display:inline-block;
+}
+.btn-outline{
+  background:none;
+  border:1px solid rgba(255,255,255,0.08);
+  color:var(--dev-white);
+  padding:10px 14px;
+  border-radius:10px;
+  text-decoration:none;
 }
 
 /* Hero */
@@ -52,30 +71,44 @@ body{
   display:flex;
   align-items:center;
   justify-content:space-between;
-  padding:80px 8%;
+  padding:72px var(--container-padding);
   gap:40px;
 }
 .hero .left{flex:1;max-width:720px}
-.hero h1{font-family:var(--font-heading);font-size:56px;margin:0 0 16px;line-height:1.02}
-.hero p{color:var(--dev-smoke);font-size:18px;margin:0 0 24px}
-.hero .actions{display:flex;gap:12px}
-.hero .mockup{flex:0 0 420px;text-align:center}
+.hero h1{
+  font-family:var(--font-heading);
+  font-size:56px;
+  margin:0 0 16px;
+  line-height:1.02;
+}
+.hero .accent{color:var(--dev-cyan)}
+.lead{color:var(--dev-smoke);font-size:18px;margin:0 0 22px}
+.actions{display:flex;gap:12px;margin-top:8px}
+.trusted{margin-top:18px;color:var(--dev-smoke);font-size:13px}
+.mockup{flex:0 0 360px;text-align:center}
 
 /* Features */
-.features{display:flex;gap:18px;padding:40px 8%}
+.features{display:flex;gap:18px;padding:40px var(--container-padding)}
 .feature{background:#0b0b0c;padding:20px;border-radius:12px;flex:1}
 .feature h3{font-family:var(--font-heading);margin:0 0 8px;font-size:18px}
 .feature p{margin:0;color:var(--dev-smoke);font-size:14px}
 
 /* Pricing */
-.pricing{padding:40px 8%;display:flex;gap:18px;align-items:stretch}
+.pricing{padding:40px var(--container-padding);display:flex;gap:18px;align-items:stretch}
 .plan{background:linear-gradient(180deg,#0f0f10,#0b0b0c);padding:24px;border-radius:12px;flex:1;text-align:center}
 .plan h4{margin:0 0 8px;font-family:var(--font-heading)}
 .plan .price{font-size:28px;margin:8px 0;color:var(--dev-cyan)}
+.plan-desc{color:var(--dev-smoke)}
 
 /* Footer */
-.footer{padding:36px 8%;text-align:center;color:var(--dev-smoke);font-size:13px}
+.footer{padding:36px var(--container-padding);text-align:center;color:var(--dev-smoke);font-size:13px}
+.footer-inner{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.footer-brand{display:flex;gap:12px;align-items:center}
+.logo-sm{height:36px}
+
+/* Responsive */
 @media(max-width:900px){
   .hero{flex-direction:column;text-align:center;padding:40px 6%}
-  .hero .mockup{order:-1}
+  .mockup{order:-1}
+  .footer-inner{flex-direction:column;gap:8px}
 }
