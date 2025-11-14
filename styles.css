@@ -2,7 +2,6 @@
    Headings: Montserrat
    Body: Futura Semibold (via CDN if available), with fallbacks
 */
-
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&display=swap');
 
 :root{
@@ -16,10 +15,13 @@
   --font-body: "Futura PT", "Futura", "Trebuchet MS", Arial, sans-serif;
   --container-padding: 8%;
 }
-
+main {
+    flex-grow: 1; /* 3. Hace que main consuma el espacio restante */
+}
 /* Reset & base */
 *{box-sizing:border-box}
-html,body{height:100%}
+html,body{height:100% ; margin:0;display: flex; 
+    flex-direction: column;} 
 body{
   margin:0;
   font-family: var(--font-body);
@@ -39,7 +41,7 @@ body{
   border-bottom: 1px solid rgba(255,255,255,0.03);
 }
 .brand{display:flex;align-items:center;gap:14px}
-.logo{height:56px;display:block}
+.logo{height:56px;display:block;border-radius:25%;}
 .title{font-family:var(--font-heading);font-weight:800;font-size:18px;letter-spacing:1px}
 .subtitle{font-size:12px;color:var(--dev-smoke)}
 
@@ -90,8 +92,8 @@ body{
 /* Features */
 .features{display:flex;gap:18px;padding:40px var(--container-padding)}
 .feature{background:#0b0b0c;padding:20px;border-radius:12px;flex:1}
-.feature h3{font-family:var(--font-heading);margin:0 0 8px;font-size:18px}
-.feature p{margin:0;color:var(--dev-smoke);font-size:14px}
+.feature h3{font-family:var(--font-heading);margin:0 0 8px;font-size:50px}
+.feature p{margin:0;color:var(--dev-smoke);font-size:30px}
 
 /* Pricing */
 .pricing{padding:40px var(--container-padding);display:flex;gap:18px;align-items:stretch}
@@ -104,7 +106,7 @@ body{
 .footer{padding:36px var(--container-padding);text-align:center;color:var(--dev-smoke);font-size:13px}
 .footer-inner{display:flex;align-items:center;justify-content:space-between;gap:12px}
 .footer-brand{display:flex;gap:12px;align-items:center}
-.logo-sm{height:36px}
+.logo-sm{height:36px;border-radius: 25%;}
 
 /* Responsive */
 @media(max-width:900px){
@@ -112,3 +114,168 @@ body{
   .mockup{order:-1}
   .footer-inner{flex-direction:column;gap:8px}
 }
+.btn-primary:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+  transition: all 0.2s ease;
+}
+.btn-outline:hover {
+  border-color: var(--dev-cyan);
+  color: var(--dev-cyan);
+  transition: all 0.2s ease;
+}
+
+/* -------- Devoria Screenshots Carousel-------- */
+.carousel-section { padding: 32px var(--container-padding); }
+.carousel { position: relative; max-width:1100px; margin: 0 auto; display:flex; align-items:center; gap:12px; }
+.carousel-track-wrapper { overflow:hidden; width:100%; border-radius:12px; box-shadow:0 10px 30px rgba(0,0,0,0.45); }
+.carousel-track { display:flex; margin:0; padding:0; list-style:none; transition:transform 400ms cubic-bezier(.22,.9,.28,1); will-change:transform; }
+.carousel-slide { display:flex; align-items:center; justify-content:center; /* width set by JS */ }
+.carousel-slide img { width:100%; height:auto; display:block; object-fit:contain; }
+
+/* Buttons */
+.carousel-btn { position: absolute; top:50%; transform:translateY(-50%); z-index:4;
+  background: rgba(11,11,12,0.6); border:none; color:var(--dev-white); width:44px; height:44px; border-radius:8px; cursor:pointer;
+  display:flex; align-items:center; justify-content:center; font-size:20px; }
+.carousel-btn.prev { left:8px; }
+.carousel-btn.next { right:8px; }
+.carousel-btn:hover { background: rgba(0,198,215,0.95); color: var(--dev-dark); }
+
+/* Dots */
+.carousel-dots { display:flex; gap:8px; justify-content:center; margin-top:12px; }
+.carousel-dot { width:10px; height:10px; border-radius:999px; background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.06); cursor:pointer; }
+.carousel-dot.active { background:var(--dev-cyan); border-color:rgba(0,0,0,0.08); }
+
+@media(max-width:600px){
+  .carousel-btn { width:40px; height:40px; font-size:18px; }
+  .carousel-section { padding:20px 6%; }
+}
+/* ==========================
+  Fixes for horizontal scroll
+  ========================== */
+
+/* Safety: box-sizing already set, ensure no container exceeds viewport */
+html, body {
+  max-width: 100%;
+  overflow-x: hidden; /* defensa final: evita scroll horizontal */
+}
+
+/* Allow flex items to shrink (most common cause of horizontal overflow) */
+.header, .brand, .nav, .hero, .hero .left, .mockup, .features, .pricing, .plan, .courses-grid, main, .footer {
+  box-sizing: border-box;
+  min-width: 0; /* <-- CRUCIAL for flex children to not overflow */
+}
+
+/* Hero layout: allow wrapping on small screens */
+.hero {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding-left: 6%;
+  padding-right: 6%;
+  padding-top: 48px;
+  padding-bottom: 48px;
+  flex-wrap: wrap; /* permite que left y mockup bajen uno debajo del otro */
+}
+
+/* Left column adapts but won't force width */
+.hero .left {
+  flex: 1 1 520px;   /* crece, encoge, base 520px */
+  min-width: 0;      /* importante para que no provoque overflow */
+}
+
+/* Mockup becomes responsive: never wider than its container */
+.mockup {
+  flex: 0 0 auto;
+  width: 100%;
+  max-width: 360px;  /* tamaño ideal en desktop */
+  margin: 0 auto;
+}
+
+/* Make sure images inside .mockup and anywhere are fluid */
+img, .mockup img, .course-thumb, .modal .thumb {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  object-fit: contain;
+}
+
+/* Features / Pricing: allow wrap and responsive typography */
+.features {
+  display: flex;
+  gap: 18px;
+  padding-left: 6%;
+  padding-right: 6%;
+  flex-wrap: wrap; /* evita overflow si los bloques no caben */
+}
+
+.feature {
+  flex: 1 1 220px; /* tarjetas flexibles */
+  min-width: 0;
+}
+
+/* Responsive typography for features: prevents huge text in mobile */
+.feature h3 {
+  font-size: clamp(20px, 3.6vw, 32px); /* minimo 20, ideal en mobile, max 32 */
+  margin: 0 0 8px;
+}
+.feature p {
+  font-size: clamp(14px, 2.6vw, 18px);
+  margin: 0;
+}
+
+/* Pricing cards wrap, avoid fixed-width forcing scroll */
+.pricing {
+  display: flex;
+  gap: 18px;
+  padding-left: 6%;
+  padding-right: 6%;
+  flex-wrap: wrap;
+}
+.plan {
+  flex: 1 1 220px;
+  min-width: 200px; /* evita que se compriman demasiado */
+}
+
+/* Header: keep brand and nav flexible */
+.header {
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding-left: 6%;
+  padding-right: 6%;
+}
+.brand { min-width: 0; display:flex; gap:12px; align-items:center; }
+.nav { margin-left:auto; display:flex; gap:8px; flex-wrap:wrap; }
+
+/* Buttons and inputs: prevent them forcing width */
+.actions, .controls, .card-footer {
+  display:flex;
+  gap:12px;
+  align-items:center;
+  flex-wrap:wrap;
+  min-width:0;
+}
+input[type="search"], .search, .select, .btn-primary, .btn-outline {
+  max-width:100%;
+  box-sizing:border-box;
+}
+
+/* Carousel wrapper: ensure it can't overflow */
+.carousel, .carousel-track-wrapper {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+/* Mobile adjustments for large paddings previously used */
+@media (max-width: 900px) {
+  :root { --container-padding: 6%; } /* reduce padding en móvil */
+  .hero, .features, .pricing, .carousel-section { padding-left: 6%; padding-right: 6%; }
+  .feature h3 { font-size: clamp(18px, 5.5vw, 28px); }
+}
+
+/* Debug helper (uncomment to visualize offenders)
+* { outline: 1px solid rgba(255,0,0,0.03) !important; }
+*/
