@@ -1,0 +1,335 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Devoria Academy — Cursos y Recursos</title>
+
+  <link rel="icon" type="image/png" href="./devoria.png">
+  <meta name="theme-color" content="#00C6D7">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.cdnfonts.com/css/futura-pt" rel="stylesheet">
+
+  <!-- Reuse main styles -->
+  <link rel="stylesheet" href="styles.css" />
+
+  <style>
+    /* Small Academy-specific overrides */
+    .academy-hero {
+      padding: 72px var(--container-padding);
+      display:flex;
+      gap:40px;
+      align-items:center;
+      justify-content:space-between;
+    }
+    .academy-hero .left { max-width:720px; }
+    .academy-hero h1 { font-family:var(--font-heading); font-size:48px; margin:0 0 12px; }
+    .academy-hero p { color:var(--dev-smoke); margin:0 0 18px; }
+
+    .controls { display:flex; gap:12px; align-items:center; margin-top:10px; flex-wrap:wrap; }
+    .search { padding:10px 12px; border-radius:8px; border:1px solid rgba(255,255,255,0.06); background:#0b0b0c; color:var(--dev-white); min-width:240px; }
+    .select { padding:10px 12px; border-radius:8px; border:1px solid rgba(255,255,255,0.06); background:#0b0b0c; color:var(--dev-white); }
+
+    .courses-grid { display:grid; gap:18px; grid-template-columns: repeat(auto-fit, minmax(260px,1fr)); padding:32px var(--container-padding); }
+    .course-card { background: linear-gradient(180deg,#0b0b0c,#090909); border-radius:12px; overflow:hidden; box-shadow:0 8px 24px rgba(0,0,0,0.6); display:flex; flex-direction:column; }
+
+    /* Thumb as background (shows complete image with contain) */
+    .course-thumb {
+      width: 100%;
+      height: 160px;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: contain;
+      border-bottom: 1px solid rgba(255,255,255,0.03);
+      background-color: #0b0b0c;
+    }
+    /* Allow using <img> fallback visually hidden (in case) */
+    .course-thumb img { display:none; }
+
+    .course-body { padding:14px; display:flex; flex-direction:column; gap:8px; flex:1; }
+    .course-title { font-family:var(--font-heading); font-size:16px; margin:0; }
+    .course-meta { color:var(--dev-smoke); font-size:13px; display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+    .tag { background:rgba(0,198,215,0.08); color:var(--dev-cyan); padding:6px 8px; border-radius:8px; font-size:12px; font-weight:700; }
+
+    .card-footer { display:flex; justify-content:space-between; align-items:center; padding:12px 14px; border-top:1px solid rgba(255,255,255,0.03); background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent); }
+    .btn-ghost { background:transparent; color:var(--dev-cyan); border:1px solid rgba(0,198,215,0.12); padding:8px 10px; border-radius:8px; text-decoration:none; }
+    .btn-enroll { background:var(--dev-cyan); color:var(--dev-dark); padding:8px 12px; border-radius:8px; font-weight:700; text-decoration:none; }
+
+    /* Resources */
+    .resources { padding:28px var(--container-padding); display:flex; gap:18px; flex-wrap:wrap; }
+    .resource { background:#0b0b0c;padding:16px;border-radius:10px;min-width:220px; flex:1; }
+
+    /* Modal */
+    .modal-backdrop { position:fixed; inset:0; background:rgba(0,0,0,0.7); display:none; align-items:center; justify-content:center; z-index:50; }
+    .modal { width:min(980px,96%); background:var(--dev-dark); border-radius:12px; padding:24px; box-shadow:0 30px 60px rgba(0,0,0,0.7); color:var(--dev-white); }
+    .modal .thumb { width:100%; height:320px; object-fit:contain; border-radius:8px; background-color:#0b0b0c; display:block; }
+    .modal .modal-body { display:flex; gap:18px; margin-top:12px; }
+    .modal .modal-left { flex:1; }
+    .modal .modal-right { width:320px; flex-shrink:0; }
+
+    @media(max-width:900px){
+      .academy-hero { flex-direction:column; text-align:center; padding:40px 6%; }
+      .modal .modal-body { flex-direction:column; }
+      .modal .modal-right { width:100%; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header (reuse same header structure) -->
+  <header class="header">
+    <div class="brand">
+      <a href="./"><img class="logo" src="./devoria.png" alt="Devoria logo" /></a>
+      <div>
+        <div class="title">DEVORIA ACADEMY</div>
+        <div class="subtitle">Aprende, crece y certifica tus habilidades</div>
+      </div>
+    </div>
+
+    <nav class="nav">
+      <a class="btn-outline" href="./">Volver</a>
+      <a class="btn-primary" href="#courses">Explorar Cursos</a>
+    </nav>
+  </header>
+
+  <main>
+    <!-- Hero -->
+    <section class="academy-hero">
+      <div class="left">
+        <h1>Aprende con Devoria <span class="accent">Academy</span></h1>
+        <p>Materiales, talleres y cursos diseñados por desarrolladores para desarrolladores y profesionales del retail. Desde fundamentos hasta integraciones avanzadas con Devoria One.</p>
+
+        <div class="controls" role="search" aria-label="Buscar cursos">
+          <input id="searchInput" class="search" type="search" placeholder="Buscar curso, etiqueta o autor...">
+          <select id="filterCategory" class="select" aria-label="Filtrar por categoría">
+            <option value="all">Todas las categorías</option>
+            <option value="pos">POS / Retail</option>
+            <option value="dev">Desarrollo</option>
+            <option value="cloud">Cloud / Infra</option>
+            <option value="business">Negocios</option>
+          </select>
+          <button id="clearFilters" class="btn-outline" type="button">Limpiar</button>
+        </div>
+      </div>
+
+      <div class="right">
+        <img src="./academy_assets/academy-hero.png" alt="Academy hero" style="max-width:420px;">
+      </div>
+    </section>
+
+    <!-- Courses grid -->
+    <section id="courses" class="courses-grid" aria-live="polite">
+      <!-- Card 1: using background-image thumb -->
+      <article class="course-card" data-category="pos" data-title="POS Essentials">
+        <div class="course-thumb" style="background-image:url('./academy_assets/course1.png')" role="img" aria-label="POS Essentials"></div>
+        <div class="course-body">
+          <h3 class="course-title">POS Essentials — Inicio rápido</h3>
+          <div class="course-meta">
+            <span class="tag">POS</span>
+            <span>3h • 8 lecciones</span>
+            <span class="instructor">Instructor: Ana Perez</span>
+          </div>
+          <p style="color:var(--dev-smoke);font-size:14px;margin-top:6px;">Aprende a configurar Devoria One, realizar ventas y gestionar devoluciones.</p>
+        </div>
+        <div class="card-footer">
+          <a class="btn-ghost" href="#" data-action="details">Ver</a>
+          <a class="btn-enroll" href="#" data-action="enroll">Inscribirme</a>
+        </div>
+      </article>
+
+      <!-- Card 2: converted to background thumb too -->
+      <article class="course-card" data-category="dev" data-title="APIs & Integrations">
+        <div class="course-thumb" style="background-image:url('./academy_assets/course2.png')" role="img" aria-label="APIs & Integrations"></div>
+        <div class="course-body">
+          <h3 class="course-title">APIs & Integrations</h3>
+          <div class="course-meta">
+            <span class="tag">Dev</span>
+            <span>5h • 12 lecciones</span>
+            <span class="instructor">Instructor: Luis Gómez</span>
+          </div>
+          <p style="color:var(--dev-smoke);font-size:14px;margin-top:6px;">Construye integraciones con ERP, gateways de pago y plugins para Devoria One.</p>
+        </div>
+        <div class="card-footer">
+          <a class="btn-ghost" href="#" data-action="details">Ver</a>
+          <a class="btn-enroll" href="#" data-action="enroll">Inscribirme</a>
+        </div>
+      </article>
+
+      <!-- Card 3: converted to background thumb too -->
+      <article class="course-card" data-category="business" data-title="Retail Analytics">
+        <div class="course-thumb" style="background-image:url('./academy_assets/course3.png')" role="img" aria-label="Retail Analytics"></div>
+        <div class="course-body">
+          <h3 class="course-title">Retail Analytics — KPIs para tiendas</h3>
+          <div class="course-meta">
+            <span class="tag">Business</span>
+            <span>2.5h • 6 lecciones</span>
+            <span class="instructor">Instructor: Marta Ruiz</span>
+          </div>
+          <p style="color:var(--dev-smoke);font-size:14px;margin-top:6px;">Aprende a interpretar informes y optimizar rotación de inventario y márgenes.</p>
+        </div>
+        <div class="card-footer">
+          <a class="btn-ghost" href="#" data-action="details">Ver</a>
+          <a class="btn-enroll" href="#" data-action="enroll">Inscribirme</a>
+        </div>
+      </article>
+
+      <!-- Add more cards as needed -->
+    </section>
+
+    <!-- Resources -->
+    <section class="resources" aria-label="Recursos y materiales">
+      <div class="resource">
+        <h4 style="margin:0 0 8px;font-family:var(--font-heading)">Guía rápida: Onboarding</h4>
+        <p style="color:var(--dev-smoke);margin:0 0 8px">PDF con los pasos iniciales para configurar Devoria One en tu tienda.</p>
+        <a class="btn-ghost" href="./academy_assets/onboarding.pdf" target="_blank">Descargar PDF</a>
+      </div>
+      <div class="resource">
+        <h4 style="margin:0 0 8px;font-family:var(--font-heading)">Webinars</h4>
+        <p style="color:var(--dev-smoke);margin:0 0 8px">Grabaciones de webinars sobre integraciones y casos de éxito.</p>
+        <a class="btn-ghost" href="./academy_assets/webinars.html">Ver videos</a>
+      </div>
+      <div class="resource">
+        <h4 style="margin:0 0 8px;font-family:var(--font-heading)">Certificación Devoria</h4>
+        <p style="color:var(--dev-smoke);margin:0 0 8px">Programa de certificación para partners y desarrolladores.</p>
+        <a class="btn-ghost" href="#">Más info</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <img class="logo-sm" src="./devoria.png" alt="Devoria logo small" />
+        <div>Devoria — Join the Code.</div>
+      </div>
+      <div style="color:var(--dev-smoke)">Contacto • Soporte • Terms</div>
+    </div>
+  </footer>
+
+  <!-- Modal detalle de curso -->
+  <div id="courseModal" class="modal-backdrop" role="dialog" aria-hidden="true" aria-modal="true">
+    <div class="modal" role="document">
+      <button id="closeModal" style="float:right;background:transparent;border:none;color:var(--dev-smoke);font-size:20px;">✕</button>
+      <!-- modalThumb is an <img> to show the course image inside modal -->
+      <img id="modalThumb" class="thumb" src="" alt="">
+      <div class="modal-body">
+        <div class="modal-left">
+          <h2 id="modalTitle" style="margin:8px 0 6px;font-family:var(--font-heading)"></h2>
+          <p id="modalDesc" style="color:var(--dev-smoke)"></p>
+          <ul id="modalLessons" style="color:var(--dev-smoke);margin-top:12px"></ul>
+        </div>
+        <div class="modal-right">
+          <div style="background:#091018;padding:12px;border-radius:8px">
+            <div style="font-weight:800">Instructor</div>
+            <div id="modalInstructor" style="color:var(--dev-smoke);margin-top:6px">—</div>
+            <div style="margin-top:12px"><a id="modalEnroll" class="btn-enroll" href="#">Inscribirme</a></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+  // Simple academy interactions: search, filter, modal, enroll
+  document.addEventListener('DOMContentLoaded', function () {
+    const searchInput = document.getElementById('searchInput');
+    const filterSelect = document.getElementById('filterCategory');
+    const clearBtn = document.getElementById('clearFilters');
+    const courseCards = Array.from(document.querySelectorAll('.course-card'));
+    const modal = document.getElementById('courseModal');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalDesc = document.getElementById('modalDesc');
+    const modalThumb = document.getElementById('modalThumb');
+    const modalInstructor = document.getElementById('modalInstructor');
+    const modalLessons = document.getElementById('modalLessons');
+    const modalEnroll = document.getElementById('modalEnroll');
+    const closeModal = document.getElementById('closeModal');
+
+    function normalize(s){ return (s||'').toString().trim().toLowerCase(); }
+
+    function applyFilters(){
+      const q = normalize(searchInput.value || '');
+      const cat = filterSelect.value;
+      courseCards.forEach(card => {
+        const title = normalize(card.dataset.title || card.querySelector('.course-title').innerText);
+        const category = card.dataset.category || 'other';
+        const matchesQuery = !q || title.includes(q) || card.innerText.toLowerCase().includes(q);
+        const matchesCategory = (cat === 'all') || (cat === category);
+        card.style.display = (matchesQuery && matchesCategory) ? 'flex' : 'none';
+      });
+    }
+
+    searchInput.addEventListener('input', applyFilters);
+    filterSelect.addEventListener('change', applyFilters);
+    clearBtn.addEventListener('click', function(){ searchInput.value=''; filterSelect.value='all'; applyFilters(); });
+
+    // Modal handlers
+    document.body.addEventListener('click', function(e){
+      const action = e.target.dataset.action;
+      if (!action) return;
+      const card = e.target.closest('.course-card');
+      if (!card) return;
+
+      if (action === 'details') {
+        // title
+        const title = card.querySelector('.course-title').innerText;
+        modalTitle.innerText = title;
+
+        // description
+        const descEl = card.querySelector('.course-body p');
+        modalDesc.innerText = descEl ? descEl.innerText : '';
+
+        // instructor: last .instructor span or last span inside .course-meta
+        let instructor = '';
+        const instEl = card.querySelector('.course-meta .instructor');
+        if (instEl) instructor = instEl.innerText;
+        else {
+          const metaSpans = card.querySelectorAll('.course-meta span');
+          if (metaSpans.length) instructor = metaSpans[metaSpans.length-1].innerText;
+        }
+        modalInstructor.innerText = instructor || '—';
+
+        // lessons placeholder
+        modalLessons.innerHTML = '<li>Lección 1 • Introducción</li><li>Lección 2 • Configuración</li><li>Lección 3 • Uso diario</li>';
+
+        // thumbnail: support div background-image or img
+        const thumbDiv = card.querySelector('.course-thumb');
+        let thumbUrl = '';
+        if (thumbDiv) {
+          // try computed style
+          const bg = window.getComputedStyle(thumbDiv).getPropertyValue('background-image');
+          // background-image: url("...") or none
+          const match = /url\\(["']?(.*?)["']?\\)/.exec(bg);
+          if (match && match[1]) thumbUrl = match[1];
+        }
+        // fallback: look for img inside (if any)
+        if (!thumbUrl) {
+          const img = card.querySelector('.course-thumb img');
+          if (img && img.src) thumbUrl = img.src;
+        }
+
+        // set modal image and show
+        modalThumb.src = thumbUrl || './devoria.png';
+        modalThumb.alt = title + ' — preview';
+        modal.style.display = 'flex';
+        modal.setAttribute('aria-hidden', 'false');
+        // focus for accessibility
+        closeModal.focus();
+      } else if (action === 'enroll') {
+        alert('Gracias — te has inscrito correctamente (simulación).');
+      }
+    });
+
+    closeModal.addEventListener('click', function(){ modal.style.display='none'; modal.setAttribute('aria-hidden','true'); });
+
+    // close modal with ESC
+    document.addEventListener('keydown', function(e){
+      if (e.key === 'Escape' && modal.style.display === 'flex'){ modal.style.display='none'; modal.setAttribute('aria-hidden','true'); }
+    });
+
+    applyFilters();
+  });
+  </script>
+</body>
+</html>

@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Devoria One — POS Retail System</title>
+  <link rel="icon" type="image/png" href="./devoria.png">
+  <meta name="theme-color" content="#00C6D7">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.cdnfonts.com/css/futura-pt" rel="stylesheet">
+
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+  <header class="header">
+    <div class="brand">
+      <a href="./"><img class="logo" src="./devoria.png" alt="Devoria logo" /></a>
+      <div>
+        <div class="title">DEVORIA ONE</div>
+        <div class="subtitle">POS especializado en Retail</div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="left">
+        <h1><span class="accent">Devoria One</span> POS System</h1>
+        <p class="lead">El sistema de punto de venta diseñado para tiendas retail modernas. Con interfaz fluida, sincronización en la nube y control total de inventario, Devoria One simplifica la venta y maximiza la eficiencia.</p>
+        <div class="actions">
+          <a class="btn-primary" href="#">Probar Ahora</a>
+          <a class="btn-outline" href="./index.html">Volver al inicio</a>
+        </div>
+      </div>
+      <div class="mockup">
+        <img src="./devoria_wordmark_on_dark.png" alt="Devoria One mockup" style="max-width:320px;">
+      </div>
+    </section>
+
+    <section class="features">
+      <div class="feature">
+        <h3>Ventas Rápidas</h3>
+        <p>Interfaz táctil optimizada para alto volumen de clientes y múltiples terminales.</p>
+      </div>
+      <div class="feature">
+        <h3>Gestión de Inventario</h3>
+        <p>Actualiza existencias automáticamente y sincroniza sucursales al instante.</p>
+      </div>
+      <div class="feature">
+        <h3>Reportes Inteligentes</h3>
+        <p>Obtén métricas diarias, análisis de ventas y rendimiento del personal en tiempo real.</p>
+      </div>
+    </section>
+
+    <!-- Screenshots Carousel -->
+    <section class="carousel-section" aria-label="Capturas de Devoria One">
+      <div class="carousel" id="devoriaCarousel">
+        <button class="carousel-btn prev" aria-label="Anterior" type="button">&larr;</button>
+
+        <div class="carousel-track-wrapper">
+          <ul class="carousel-track">
+            <li class="carousel-slide"><img src="./carrusel/Pos.png" alt="Pantalla principal del POS"></li>
+            <li class="carousel-slide"><img src="./carrusel/Clientes.png" alt="Gestión de clientes"></li>
+          
+        </div>
+
+        <button class="carousel-btn next" aria-label="Siguiente" type="button">&rarr;</button>
+
+        <div class="carousel-dots" id="carouselDots" aria-hidden="false"></div>
+      </div>
+    </section>
+
+    <section class="pricing">
+      <div class="plan">
+        <h4>Retail Lite</h4>
+        <div class="price">$49 / mes</div>
+        <div class="plan-desc">1 caja • Soporte básico</div>
+      </div>
+      <div class="plan">
+        <h4>Retail Pro</h4>
+        <div class="price">$149 / mes</div>
+        <div class="plan-desc">Multi-sucursal • Integraciones ERP</div>
+      </div>
+      <div class="plan">
+        <h4>Retail Enterprise</h4>
+        <div class="price">Custom</div>
+        <div class="plan-desc">Infraestructura dedicada • SLA Premium</div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <img class="logo-sm" src="./devoria.png" alt="Devoria logo small" />
+        <div>Devoria One — Designed for Retail.</div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Robust Carousel script -->
+  <script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const track = document.querySelector('.carousel-track');
+    if (!track) return;
+    const wrapper = document.querySelector('.carousel-track-wrapper');
+    const slides = Array.from(track.querySelectorAll('.carousel-slide'));
+    const nextBtn = document.querySelector('.carousel-btn.next');
+    const prevBtn = document.querySelector('.carousel-btn.prev');
+    const dotsNav = document.getElementById('carouselDots');
+
+    let currentIndex = 0;
+    let wrapperWidth = wrapper.clientWidth;
+    let autoplay = true;
+    let autoplayInterval = 4000;
+    let autoplayTimer = null;
+    let isDragging = false, startX = 0, movedX = 0;
+
+    // Build dots
+    slides.forEach((_, idx) => {
+      const dot = document.createElement('button');
+      dot.className = 'carousel-dot' + (idx===0 ? ' active' : '');
+      dot.setAttribute('aria-label', 'Ir a la diapositiva ' + (idx+1));
+      dot.dataset.index = idx;
+      dotsNav.appendChild(dot);
+    });
+    const dots = Array.from(dotsNav.children);
+
+    // Set each slide width to wrapper width
+    function setSlideWidths(){
+      wrapperWidth = wrapper.clientWidth;
+      slides.forEach(slide => {
+        slide.style.minWidth = wrapperWidth + 'px';
+        slide.style.flex = '0 0 ' + wrapperWidth + 'px';
+      });
+      moveToSlide(currentIndex, false);
+    }
+
+    function moveToSlide(index, animate = true){
+      if (animate) track.style.transition = 'transform 400ms cubic-bezier(.22,.9,.28,1)';
+      else track.style.transition = 'none';
+      const amount = - (wrapperWidth * index);
+      track.style.transform = 'translateX(' + amount + 'px)';
+      dots.forEach(d => d.classList.remove('active'));
+      if (dots[index]) dots[index].classList.add('active');
+    }
+
+    function goNext(){ currentIndex = (currentIndex + 1) % slides.length; moveToSlide(currentIndex); resetAutoplay(); }
+    function goPrev(){ currentIndex = (currentIndex - 1 + slides.length) % slides.length; moveToSlide(currentIndex); resetAutoplay(); }
+
+    // handlers
+    nextBtn.addEventListener('click', goNext);
+    prevBtn.addEventListener('click', goPrev);
+    dotsNav.addEventListener('click', (e) => {
+      if (!e.target.matches('.carousel-dot')) return;
+      currentIndex = Number(e.target.dataset.index);
+      moveToSlide(currentIndex);
+      resetAutoplay();
+    });
+
+    // pointer (touch) support
+    track.addEventListener('pointerdown', (e) => {
+      isDragging = true;
+      startX = e.clientX;
+      track.style.transition = 'none';
+      track.setPointerCapture && track.setPointerCapture(e.pointerId);
+    });
+    track.addEventListener('pointermove', (e) => {
+      if (!isDragging) return;
+      movedX = e.clientX - startX;
+      track.style.transform = `translateX(${ -currentIndex * wrapperWidth + movedX }px)`;
+    });
+    function endDrag(e){
+      if (!isDragging) return;
+      isDragging = false;
+      track.style.transition = '';
+      if (movedX < -60) goNext();
+      else if (movedX > 60) goPrev();
+      else moveToSlide(currentIndex);
+      movedX = 0;
+    }
+    track.addEventListener('pointerup', endDrag);
+    track.addEventListener('pointercancel', endDrag);
+    track.addEventListener('pointerleave', endDrag);
+
+    // keyboard
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight') goNext();
+      if (e.key === 'ArrowLeft') goPrev();
+    });
+
+    // autoplay
+    function startAutoplay(){
+      if (!autoplay || slides.length <= 1) return;
+      autoplayTimer = setInterval(() => { currentIndex = (currentIndex + 1) % slides.length; moveToSlide(currentIndex); }, autoplayInterval);
+    }
+    function resetAutoplay(){ clearInterval(autoplayTimer); startAutoplay(); }
+
+    // init
+    setSlideWidths();
+    window.addEventListener('resize', setSlideWidths);
+    startAutoplay();
+  });
+  </script>
+</body>
+</html>
